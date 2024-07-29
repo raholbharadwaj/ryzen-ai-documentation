@@ -8,17 +8,18 @@ Installation Instructions
 Supported Configurations
 ************************
 
-The Ryzen AI Software supports the following processors running Windows 11
+The Ryzen AI Software supports the following processors running Windows 11:
 
 - Phoenix (PHX): AMD Ryzen™ 7940HS, 7840HS, 7640HS, 7840U, 7640U.
 - Hawk (HPT): AMD Ryzen™ 8640U, 8640HS, 8645H, 8840U, 8840HS, 8845H, 8945H.
-- Strix (STX): AMD Ryzen™ Ryzen AI 9 HX370, Ryzen AI 9 365
+- Strix (STX): AMD Ryzen™ AI 9 HX370, Ryzen AI 9 365.
 
-The rest of this document will refer to Phoenix as PHX, Hawk as HPT, and Strix as STX.
+The rest of this document refers to Phoenix as PHX, Hawk as HPT, and Strix as STX.
 
 .. note::
    In this documentation, "NPU" is used in descriptions, while "IPU" is retained in the tool's language, code, screenshots, and commands. This intentional 
    distinction aligns with existing tool references and does not affect functionality. Avoid making replacements in the code.
+
 
 
 ******************
@@ -71,8 +72,7 @@ Install NPU Drivers
 
 |
 
-|memo| **NOTE**: From RyzenAI Software 1.2 GA release only the MCDM driver is supported. For older Windows OS builds (< 22631.3527) the legacy WDF driver will be installed, supported by older RyzenAI Software (1.2-EA release or older).
-
+|memo| **NOTE**: From the RyzenAI Software 1.2 GA release onwards, only the MCDM driver is supported. For older Windows OS builds (< 22631.3527), the legacy WDF driver is installed, which is supported by older RyzenAI Software versions (1.2-EA release or earlier).
 |
 
 
@@ -94,7 +94,7 @@ Install the Ryzen AI Software
 The Ryzen AI Software packages are now installed in the conda environment created by the installer. Refer to the :doc:`runtime_setup` page for more details about setting up the environment before running an inference session on the NPU.
 
 
-|memo| **NOTE**: This installation is only for CNN models. The LLM models flow installation is hosted in the GitHub repo; for details, please check :doc:`llm_flow`
+|memo| **NOTE**: This installation is only for CNN models. The LLM models flow installation is hosted in the GitHub repo; for details, refer to :doc:`llm_flow`
 
 
 .. _quicktest:
@@ -122,7 +122,7 @@ The Ryzen AI Software installation folder contains test to verify that the softw
    python quicktest.py
 
 
-- The quicktest.py script sets up the environment and runs a simple CNN model. On a successful run, you will see an output similar to the one shown below. This indicates that the model is running on the NPU and that the installation of the Ryzen AI Software was successful:
+- The quicktest.py script sets up the environment and runs a simple CNN model. On a successful run, you can see an output similar to the following code. This indicates that the model is running on the NPU and that the installation of the Ryzen AI Software was successful:
 
 .. code-block::
   

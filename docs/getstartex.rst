@@ -10,7 +10,8 @@ This tutorial uses a fine-tuned version of the ResNet model (using the CIFAR-10 
    In this documentation, "NPU" is used in descriptions, while "IPU" is retained in some of the tool's language, code, screenshots, and commands. This intentional 
    distinction aligns with existing tool references and does not affect functionality. Avoid making replacements in the code.
 
-- The source code files can be downloaded from `this link <https://github.com/amd/RyzenAI-SW/tree/main/tutorial/getting_started_resnet>`_. Alternatively, you can clone the RyzenAI-SW repo and change the directory into "tutorial". 
+
+The source code files can be downloaded from `here <https://github.com/amd/RyzenAI-SW/tree/main/tutorial/getting_started_resnet>`_. Alternatively, you can clone the RyzenAI SW repo and change the directory into "tutorial". 
 
 .. code-block::
 
@@ -19,7 +20,7 @@ This tutorial uses a fine-tuned version of the ResNet model (using the CIFAR-10 
 
 |
 
-The following are the steps and the required files to run the example: 
+The following are the required steps and files to run the example: 
 
 .. list-table:: 
    :widths: 20 25 25
@@ -60,7 +61,7 @@ The following are the steps and the required files to run the example:
 Step 1: Install Packages
 ************************
 
-* Ensure that the Ryzen AI Software  is correctly installed. For more details, see the :doc:`installation instructions <inst>`.
+* Ensure that the Ryzen AI Software  is correctly installed. For more details, see :doc:`installation instructions <inst>`.
 
 * Use the conda environment created during the installation for the rest of the steps. This example requires a couple of additional packages. Run the following command to install them:
 
@@ -77,9 +78,9 @@ Step 1: Install Packages
 Step 2: Prepare dataset and ONNX model
 **************************************
 
-In this example, we utilize a custom ResNet model finetuned using the CIFAR-10 dataset
+In this example, a custom ResNet model finetuned using the CIFAR-10 dataset is utilized.
 
-The ``prepare_model_data.py`` script downloads the CIFAR-10 dataset in pickle format (for python) and binary format (for C++). This dataset will be used in the subsequent steps for quantization and inference. The script also exports the provided PyTorch model into ONNX format. The following snippet from the script shows how the ONNX model is exported:
+The ``prepare_model_data.py`` script downloads the CIFAR-10 dataset in both pickle format (for Python) and binary format (for C++). This dataset is used in the subsequent steps for quantization and inference. The script also exports the provided PyTorch model to ONNX format. The following snippet from the script shows how the ONNX model is exported:
 
 .. code-block:: 
 
@@ -120,7 +121,7 @@ Run the following command to prepare the dataset and export the ONNX model:
 Step 3: Quantize the Model
 **************************
 
-Quantizing AI models from floating-point to 8-bit integers reduces computational power and the memory footprint required for inference. This example utilizes the Vitis AI ONNX quantizer workflow. Quantization tool takes the pre-trained float32 model from the previous step (``resnet_trained_for_cifar10.onnx``) and produces a quantized model.
+Quantizing AI models from floating-point to 8-bit integers reduces the computational power and memory footprint required for inference. This example utilizes the Vitis AI ONNX quantizer workflow. The quantization tool takes the pre-trained float32 model from the previous step (``resnet_trained_for_cifar10.onnx``) and produces a quantized model.
 
 .. code-block::
 
@@ -172,7 +173,7 @@ We demonstrate deploying the quantized model using both Python and C++ APIs.
 * :ref:`Deployment - C++ <dep-cpp>`
 
 .. note::
-   During the Python and C++ deployment, the compiled model artifacts are saved in the cache folder named ``<run directory>/modelcachekey``. Ryzen-AI does not support the complied model artifacts across the versions, so if the model artifacts exist from the previous software version, ensure to delete the folder ``modelcachekey`` before the deployment steps. 
+   During the Python and C++ deployment, the compiled model artifacts are saved in the cache folder named ``<run directory>/modelcachekey``. Ryzen AI does not support the complied model artifacts across the versions, so if the model artifacts exist from the previous software version, ensure to delete the ``modelcachekey`` folder before the deployment steps. 
 
 
 .. _dep-python:
@@ -212,9 +213,9 @@ Deploy the Model on the Ryzen AI NPU
 
 To successfully run the model on the NPU, run the following setup steps:
 
-- Make sure to set the XLNX_VART_FIRMWARE environment variable based to your APU type. Refer to :ref:`runtime setup instructions <npu-configurations>` on how to do this.
+- Ensure to set the XLNX_VART_FIRMWARE environment variable based to your APU type. Refer to :ref:`runtime setup instructions <npu-configurations>` on how to do this.
 
-- Ensure ``RYZEN_AI_INSTALLATION_PATH`` points to ``path\to\ryzen-ai-sw-<version>\``. If you installed Ryzen-AI software using the MSI installer, this variable should already be set. Ensure that the Ryzen-AI software package has not been moved post installation, in which case ``RYZEN_AI_INSTALLATION_PATH`` will have to be set again. 
+- Ensure that ``RYZEN_AI_INSTALLATION_PATH`` points to ``path\to\ryzen-ai-sw-<version>\``. If you installed Ryzen AI software using the MSI installer, this variable should already be set. Ensure that the Ryzen AI software package has not been moved post installation, in which case ``RYZEN_AI_INSTALLATION_PATH`` will have to be set again. 
 
 - Copy the ``vaip_config.json`` runtime configuration file from the installation package to the current directory. The ``vaip_config.json`` is used by the source file ``predict.py`` to configure the Vitis AI Execution Provider.
 
@@ -374,7 +375,7 @@ To successfully run the model on the NPU:
 
 - Make sure to set the XLNX_VART_FIRMWARE environment variable based to your APU type. Refer to :ref:`runtime setup instructions <npu-configurations>` on how to do this.
 
-- Ensure ``RYZEN_AI_INSTALLATION_PATH`` points to ``path\to\ryzen-ai-sw-<version>\``. If you installed Ryzen-AI software using the MSI installer, this variable should already be set. Ensure that the Ryzen-AI software package has not been moved post installation, in which case ``RYZEN_AI_INSTALLATION_PATH`` will have to be set again. 
+- Ensure ``RYZEN_AI_INSTALLATION_PATH`` points to ``path\to\ryzen-ai-sw-<version>\``. If you installed Ryzen AI software using the MSI installer, this variable should already be set. Ensure that the Ryzen AI software package has not been moved post installation, in which case ``RYZEN_AI_INSTALLATION_PATH`` will have to be set again. 
 
 - Copy the ``vaip_config.json`` runtime configuration file from the installation package to the current directory. The ``vaip_config.json`` is used by the source file ``resnet_cifar.cpp`` to configure the Vitis AI Execution Provider.
 
@@ -401,7 +402,8 @@ The following code block from ``reset_cifar.cpp`` shows how ONNX Runtime is conf
 
     auto session = Ort::Session(env, model_name.data(), session_options);
 
-To run the model on the NPU, we will pass the npu flag and the vaip_config.json file as arguments to the C++ application. Use the following command to run the model on the NPU: 
+To run the model on the NPU, pass the `npu` flag and the `vaip_config.json` file as arguments to the C++ application. Use the following command to run the model on the NPU:
+
 
 .. code-block:: bash 
 
