@@ -7,7 +7,7 @@ Model Deployment
 ONNX Runtime with Vitis AI Execution Provider
 *********************************************
 
-Quantized models are deployed by creating an ONNX inference session and by leveraring the Vitis AI Execution Provider (VAI EP). Both the ONNX C++ and Python APIs are supported. 
+Quantized models are deployed by creating an ONNX inference session and leveraging the Vitis AI Execution Provider. Both the ONNX C++ and Python APIs are supported.
 
 .. code-block:: python
 
@@ -54,7 +54,7 @@ The Vitis AI Execution Provider supports the following options:
 Environment Variables
 =====================
 
-Additionally, the following environment variables can be used control the Ryzen AI ONNX Runtime-based deployment.
+Additionally, the following environment variables can be used to control the Ryzen AI ONNX Runtime-based deployment.
 
 
 .. list-table:: 
@@ -68,7 +68,7 @@ Additionally, the following environment variables can be used control the Ryzen 
    * - XLNX_VART_FIRMWARE
      - Mandatory
      - None
-     - Set it to one of the NPU configuration binaries. 
+     - Set it to ``C:\path\to\1x4.xclbin`` to use the throughput profile of the NPU. 
        For more details, refer to the :doc:`runtime_setup` page.
    * - XLNX_ENABLE_CACHE
      - Optional
@@ -112,61 +112,38 @@ C++ API Example
 
 .. code-block:: cpp
 
-    #include <onnxruntime_cxx_api.h>
-    // include user header files
-    // ...
-    std::string xclbin_path = "path/to/xclbin";
-    std::string model_path  = "path/to/model.onnx";
-    std::string config_path = "path/to/config.json";
-    auto model_name = strconverter.from_bytes(model_path);
-    
-    _putenv_s("XLNX_VART_FIRMWARE", xclbin_path.c_str());
-    
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "quicktest");
-    
-    // create inference session
-    auto session_options = Ort::SessionOptions();
-    auto options = std::unordered_map<std::string, std::string>{ 
-        {"config_file", config_path},          // Required
-        {"cacheDir",    "path/to/cacheDir"},   // Optional
-        {"cacheKey",    "cacheName"}           // Optional
-    };
-    session_options.AppendExecutionProvider_VitisAI(options);
-    auto session = Ort::Session(env, model_name.data(), session_options);
+   // ...
+   #include <experimental_onnxruntime_cxx_api.h>
+   // include user header files
+   // ...
 
-    // preprocess input data
-    // ...
+   auto onnx_model_path = "resnet50_pt.onnx"
+   Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "resnet50_pt");
+   auto session_options = Ort::SessionOptions();
 
+   auto options = std::unorderd_map<std::string,std::string>({});
+   options["config_file"] = "/path/to/vaip_config.json";
+   options["cacheDir"] = "/path/to/cache/directory";
+   options["cacheKey"] = "abcdefg"; // Replace abcdefg with your model name, eg. onnx_model_md5
 
-    // get input/output names from model
-    size_t                   input_count;
-    size_t                   output_count;
-    std::vector<const char*> input_names; 
-    std::vector<const char*> output_names;
-    ...
-    
-    // initialize input tensors
-    std::vector<Ort::Value>  input_tensors;
-    ... 
-    
-    // run inference
-    auto output_tensors = session.Run(
-            Ort::RunOptions(), 
-            input_names.data(), input_tensors.data(), input_count, 
-            output_names.data(), output_count);
- 
-    // postprocess output data
-    // ...
+   // Create an inference session using the Vitis AI execution provider
+   session_options.AppendExecutionProvider("VitisAI", options);
 
-|
+   auto session = Ort::Experimental::Session(env, model_name, session_options);
 
-*********************
-Simultaneous Sessions
-*********************
+   auto input_shapes = session.GetInputShapes();
+   // preprocess input data
+   // ...
 
-Up to eight simultaneous inference sessions can be run on the NPU. The runtime automatically schedules each inference session on available slots to maximize performance of the application. 
+   // Create input tensors and populate input data
+   std::vector<Ort::Value> input_tensors;
+   input_tensors.push_back(Ort::Experimental::Value::CreateTensor<float>(
+                           input_data.data(), input_data.size(), input_shapes[0]));
 
-The performance of individual inference sessions is impacted by multiple factors, including the APU type, the NPU configuration used, the number of other inference sessions running on the NPU, and the applications running the inference sessions.
+   auto output_tensors = session.Run(session.GetInputNames(), input_tensors,
+                                      session.GetOutputNames());
+   // postprocess output data
+   // ...
 
 |
 
@@ -174,9 +151,7 @@ The performance of individual inference sessions is impacted by multiple factors
 Model Encryption
 ****************
 
-To protect developers’ intellectual property, encryption is supported as a session option.
-With this enabled, all the compiled models generated are encrypted using AES256.
-To enable encryption, you need to pass the encryption key through the VAI EP options as follows:
+To protect developers’ intellectual property, encryption is supported as a session option. With this enabled, all compiled models are encrypted using AES256. To enable encryption, you need to pass the encryption key through the VAI EP options as follows:
 
 In Python:
 
@@ -204,7 +179,7 @@ In C++:
     session_options.AppendExecutionProvider("VitisAI", options);
     auto session = Ort::Experimental::Session(env, model_name, session_options);
 
-The key is a 256-bit value represented as a 64-digit string. The model generated in the cache directory cannot be opened with Netron currently. Additionally, there is a side effect: dumping is disabled to prevent the leakage of sensitive information about the model.
+The key is a 256-bit value represented as a 64-digit string. The model generated in the cache directory cannot be opened with Netron currently. Additionally, dumping is disabled to prevent the leakage of sensitive information about the model.
 
 |
 
@@ -212,7 +187,12 @@ The key is a 256-bit value represented as a 64-digit string. The model generated
 Operator Assignment Report
 **************************
 
-Vitis AI EP generates a file named ``vitisai_ep_report.json`` that provides a report on model operator assignments across CPU and NPU. This file is automatically generated in the cache directory, which by default is ``C:\temp\{user}\vaip\.cache\<model_cache_key>`` if no explicit cache location is specified in the code. This report includes information such as the total number of nodes, the list of operator types in the model, and which nodes and operators runs on the NPU or on the CPU. (NOTE: Nodes and operators running on the NPU are reported under the DPU name). Additionally, the report includes node statistics, such as input to a node, the applied operation, and output from the node.
+Vitis AI EP generates a file named ``vitisai_ep_report.json`` that provides a report on model operator assignments across CPU and NPU. This file is automatically generated in the cache directory, which by default is ``C:\temp\{user}\vaip\.cache\<model_cache_key>`` if no explicit cache location is specified in the code. This report includes information such as the total number of nodes, the list of operator types in the model, and which nodes and operators runs on the NPU or on the CPU. 
+
+.. note::
+   Nodes and operators running on the NPU are reported under the DPU name. 
+
+Additionally, the report includes node statistics, such as input to a node, the applied operation, and output from the node.
 
 
 .. code-block:: 

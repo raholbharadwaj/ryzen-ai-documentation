@@ -1,15 +1,12 @@
-##########################
-Examples, Demos, Tutorials 
-##########################
+##############################
+Examples, Demos, and Tutorials 
+##############################
 
 This page introduces various demos, examples, and tutorials currently available with the Ryzen™ AI Software. 
 
-*************************
-Getting Started Tutorials
-*************************
-
-NPU
-~~~
+************************
+Getting Started Tutorial
+************************
 
 - The :doc:`Getting Started Tutorial <getstartex>` deploys a custom ResNet model demonstrating: 
 
@@ -17,30 +14,30 @@ NPU
   - Quantization using Vitis AI ONNX quantizer 
   - Deployment using ONNX Runtime C++ and Python code
 
-- `Hello World Jupyter Notebook Tutorial <https://github.com/amd/RyzenAI-SW/tree/main/tutorial/hello_world>`_
 
-iGPU
-~~~~
+********
+Examples
+********
 
-- `ResNet50 on iGPU <https://github.com/amd/RyzenAI-SW/tree/main/iGPU/getting_started>`_
+- `Run multiple concurrent AI applications with ONNXRuntime <https://github.com/amd/RyzenAI-SW/tree/main/example/multi-model>`_  
+- `Real-time object detection with Yolov8 <https://github.com/amd/RyzenAI-SW/tree/main/example/yolov8>`_
+- `Run LLM OPT-1.3B model with ONNXRuntime <https://github.com/amd/RyzenAI-SW/tree/main/example/transformers/opt-onnx>`_  
+- `Run LLM OPT-1.3B model with PyTorch <https://github.com/amd/RyzenAI-SW/tree/main/example/transformers>`_  
+- `Run LLM Llama 2 model with PyTorch <https://github.com/amd/RyzenAI-SW/tree/main/example/transformers>`_
+- `Run ONNX end-to-end examples with custom pre/post-processing nodes running on NPU <https://github.com/amd/RyzenAI-SW/tree/main/example/onnx-e2e>`_  
 
+*****
+Demos
+*****
 
-************************************
-Other examples, demos, and tutorials
-************************************
+- `Cloud-to-Client demo on Ryzen AI <https://github.com/amd/RyzenAI-SW/tree/main/demo/cloud-to-client>`_ 
+- `Multiple model concurrency demo on Ryzen AI <https://github.com/amd/RyzenAI-SW/tree/main/demo/multi-model-exec>`_ 
 
-- Refer to `RyzenAI-SW repo <https://github.com/amd/RyzenAI-SW/tree/main/>`_
+*********
+Tutorials
+*********
 
-
-
-..
-  ------------
-
-  #####################################
-  License
-  #####################################
-
- Ryzen AI is licensed under `MIT License <https://github.com/amd/ryzen-ai-documentation/blob/main/License>`_ . Refer to the `LICENSE File <https://github.com/amd/ryzen-ai-documentation/blob/main/License>`_ for the full license text and copyright notice.
-
-
+- `Hello World using a Jupyer Notebook <https://github.com/amd/RyzenAI-SW/tree/main/tutorial/hello_world>`_
+- `End-to-end Object Detection <https://github.com/amd/RyzenAI-SW/tree/main/tutorial/yolov8_e2e>`_
+- `Quantization for Ryzen AI <https://github.com/amd/RyzenAI-SW/tree/main/tutorial/RyzenAI_quant_tutorial>`_
 
