@@ -61,7 +61,7 @@ Microsoft Olive framework supports quantization with Vitis AI ONNX Quantization.
    pip install pydantic==1.10.9
 
 
-For additional information on Olive installation, refer to the [Microsoft documentation](https://microsoft.github.io/Olive/getstarted/installation.html).
+For additional information on Olive installation, refer to [Microsoft documentation](https://microsoft.github.io/Olive/getstarted/installation.html).
 
 
 NPU Binary selection
