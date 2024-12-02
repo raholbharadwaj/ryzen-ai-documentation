@@ -3,9 +3,12 @@ AI Analyzer
 ###################
 
 .. note::
-   This feature is currently in the Early Access stage. Early Access features are features which are still undergoing some optimization and fine-tuning. These features are not in their final form and may change as we continue to work in order to mature them into full-fledged features.
+   
+   This feature is currently in the Early Access stage. Early Access features are those that are still undergoing optimization and fine-tuning. These features are not in their final form and may change as we continue to develop them into full-fledged features.
 
-AMD AI Analyzer is a tool that supports analysis and visualization of model compilation and inference on the the Ryzen AI NPU. The primary goal of the tool is to help users better understand how the models are processed by the hardware, and to identify performance bottlenecks that may be present during model inference. Using the AI Analyzer, users can effectively visualize graph and operator partitions between the NPU and CPU. 
+
+The AMD AI Analyzer tool supports the analysis and visualization of model compilation and inference on the Ryzen AI NPU. The primary goal of the tool is to help users better understand how models are processed by the hardware and to identify performance bottlenecks that may occur during model inference. Using the AI Analyzer, you can effectively visualize graph and operator partitions between the NPU and CPU.
+
 
 ********
 Features
@@ -14,7 +17,7 @@ Features
 The AI Analyzer includes the following features and capabilities: 
 
 1. Graph partitions: The tool presents the user with a picture of how the model is paritioned across the CPU and NPU.
-2. Operator Fusion: In addition to partitioning, AI Analyzer also presents the user with a picture of how operators have been fused by the compiler. 
+2. Operator Fusion: In addition to partitioning, AI Analyzer also presents a picture of how operators have been fused by the compiler. 
 3. Inference Profile: The tool provides a breakdown and visualization of inference timing. For this, a Gantt chart of operators is provided. This chart can also be cross-probed to the fused graph.
 
 ************
@@ -33,7 +36,7 @@ If you manually installed the software, you will need to install the AI Analyzer
 Enabling Profiling and Visualization
 ************************************
 
-Profiling and Visualization can be enabled by passing additional provider options to the ONNXRuntime Inference Session. An example is shown below: 
+Profiling and Visualization can be enabled by passing additional provider options to the ONNXRuntime Inference Session. The following is an example: 
 
 .. code-block::
 
@@ -49,13 +52,13 @@ Profiling and Visualization can be enabled by passing additional provider option
 
 |
 
-The ``ai_analyzer_profiling`` flag enables generation of artifacts related to the inference profile. The ``ai_analyzer_visualization`` flag enables generation of artifacts related to graph partitions and operator fusion. These artifacts are generated as .json files in the current run directory.
+The ``ai_analyzer_profiling`` flag enables the generation of artifacts related to the inference profile. The ``ai_analyzer_visualization`` flag enables the generation of artifacts related to graph partitions and operator fusion. These artifacts are saved as .json files in the current run directory.
 
 *********************
 Launching AI Analyzer
 *********************
 
-Once the artifacts are generated, `aianalyzer` can be invoked through the command line as follows: 
+After the artifacts are generated, `aianalyzer` can be invoked through the command line as follows: 
 
 .. code-block:: bash
 
@@ -90,7 +93,7 @@ Once the artifacts are generated, `aianalyzer` can be invoked through the comman
 Analyzing ResNet50 
 ******************
 
-We can enable the AI Analyzer in the :doc:`Getting started with ResNet50 <getstartex>` example. To do this, modify the provider options as shown above in the ``predict.py`` script. When this script is run, the profiling and visualization artifacts will be dumped as .json files in the current run directory.
+You can enable the AI Analyzer in the :doc:`Getting started with ResNet50 <getstartex>` example. To do this, modify the provider options as indicated in the ``predict.py`` script. When this script is executed, the profiling and visualization artifacts are saved as .json files in the current run directory.
 
 
 Launch the AI Analyzer: 
@@ -100,7 +103,7 @@ Launch the AI Analyzer:
 
    aianalyzer <path to folder containing generated artifacts> --port=8087
 
-Follow the link displayed to open the analyzer on your browser. The analyzer displays information such as operator partitioning and hardware execution times. Some of the information displayed for the ResNet50 example are shown below.
+Follow the link displayed to open the analyzer in your browser. The analyzer displays information such as operator partitioning and hardware execution times. The following shows some of the information displayed for the ResNet50 example.
 
 
 The following donut charts show operator partitioning across the CPU and the NPU:

@@ -6,8 +6,9 @@ Other Quantizers
 
 The Ryzen AI software provides support for these additional quantizers:
 
-1. **Vitis AI Quantizer for PyTorch/TensorFlow/TensorFlow 2**: If you require Quantization Aware Training using the original model training framework, you can use Vitis AI PyTorch/TensorFlow 2/TensorFlow quantizer.
-2. **Olive Quantizer**: If you are already familiar with the Olive framework and are using it for other model transformations, quantization through Olive is also an option. 
+1. **Vitis AI Quantizer for PyTorch/TensorFlow/TensorFlow 2**: If you need Quantization Aware Training using the original model training framework, you can use the Vitis AI quantizer for PyTorch, TensorFlow, or TensorFlow 2.
+
+2. **Olive Quantizer**: If you are already familiar with the Olive framework and are using it for other model transformations, you can also use Olive for quantization.
 
 
 .. _install-pt-tf:
@@ -24,7 +25,7 @@ The Vitis AI Docker containers can be installed on Ubuntu 20.04, CentOS 7.8, 7.9
 Standard Containers
 ===================
 
-Multiple versions of the Docker container are available, each tailored to specific frameworks. Refer to these links for instrucitons on downloading and running Docker:
+Multiple versions of the Docker container are available, each tailored to specific frameworks. Follow these links for Docker download and running instructions:
 
 .. list-table:: 
    :widths: 30 70 
@@ -45,7 +46,7 @@ GPU-Accelerated Quantization Containers
 
 The standard Vitis AI Docker containers do not support GPU-accelerated quantization. To create a container with GPU-accelerated quantization enabled, download the following archive and refer to the instructions in the README file.
 
-`Download and build GPU Docker containers <https://account.amd.com/en/forms/downloads/xef.html?filename=ipu-rel-3.5.0-246.tar.gz>`_
+`Download and build GPU Docker containers <https://account.amd.com/en/forms/downloads/xef.html?filename=ipu-rel-3.5.0-276.tar.gz>`_
 
  
 
