@@ -97,15 +97,18 @@ The ``provider_options`` parameter of the ORT ``InferenceSession`` allows passin
            - 0, 1, 2, 3, 65536 (maximum effort, experimental)
            - 0
          * - ``cache_dir``
-           - VitisAI cache directory. For INT8, ``enable_cache_file_io_in_mem`` must be 0.
+           - VitisAI cache directory. Set ``enable_cache_file_io_in_mem`` to 0.
            - String
            - ``C:\temp\%USERNAME%\vaip\.cache``
          * - ``cache_key``
-           - Subfolder in cache for compiled model. For INT8, ``enable_cache_file_io_in_mem`` must be 0.
+           - Subfolder in cache for compiled model. Set ``enable_cache_file_io_in_mem`` to 0.
            - String
            - MD5 hash of model
          * - ``enable_cache_file_io_in_mem``
-           - Keep compiled model in memory (1) or save to disk (0). INT8 only.
+           - Keep compiled model in memory (1) or save to disk (0). 
+
+             - ``0``: saves to disk (BF16 and INT8 models) 
+             - ``1``: saves in memory (INT8 models only)
            - 0, 1
            - 1
          * - ``ai_analyzer_visualization``
@@ -230,8 +233,10 @@ Using BF16 Models
 
 When compiling BF16 models, an optional configuration file can be provided to the VitisAI EP. This file is specified using the :option:`config_file` provider option. For more details, refer to :ref:`Config File Options <configuration-file>` section.
 
-|memo| **NOTE**: Running BF16 Models is only supported for STX/KRK or newer devices. For the model compatibility table see :doc:`Release Notes <relnotes>`.
+|memo| **NOTE**:
 
+- Running BF16 Models is only supported for STX/KRK or newer devices. For the model compatibility table see :doc:`Release Notes <relnotes>`.
+- For C++ applications that need to compile BF16 models at runtime, include ``${CONDA_PREFIX}/Lib/site-packages/flexml/flexml_extras/lib/vaiml.dll`` along with the DLLs specified in :ref:`Application Development <app-development>`. However, using pre-compiled BF16 models is recommended for C++ deployment.
 
 Sample Python Code
 ==================

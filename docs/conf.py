@@ -33,8 +33,8 @@ author = 'Advanced Micro Devices, Inc'
 # The short X.Y version
 version = '1.7'
 # The full version, including alpha/beta/rc tags
-release = '1.7.0'
-html_last_updated_fmt = 'Jan 22, 2026'
+release = '1.7.1'
+html_last_updated_fmt = '%b %d, %Y'
 
 
 # -- General configuration ---------------------------------------------------
@@ -65,6 +65,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'linuxdoc.rstFlatTable',
     "notfound.extension",
+    "sphinx_copybutton",
 	#'recommonmark',
 	#'sphinx_markdown_tables',
 	#'edit_on_github',

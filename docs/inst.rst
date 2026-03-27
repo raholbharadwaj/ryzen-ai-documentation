@@ -5,8 +5,7 @@ Installation Instructions
 #########################
 
 
-This page covers Ryzen AI installation on Windows. For Linux installation, please refer to :doc:`linux`.
-
+This page covers Ryzen AI installation on Windows. 
 
 *************
 Prerequisites
@@ -51,12 +50,15 @@ Install NPU Drivers
 
   - :download:`NPU Driver (Version 32.0.203.280) <https://account.amd.com/en/forms/downloads/ryzenai-eula-public-xef.html?filename=NPU_RAI1.5_280_WHQL.zip>`
 
+    - NPU driver 32.0.203.280 is production driver for Phoenix, Hawk Point, Strix, Strix Halo, and Krackan Point.
+  - :download:`NPU Driver (Version 32.0.203.314) <https://account.amd.com/en/forms/downloads/ryzenai-eula-public-xef.html?filename=NPU_RAI1.6.1_314_WHQL.zip>`
+
 - Install the NPU drivers by following these steps:
 
   - Extract the downloaded ZIP file.
   - Open a terminal in administrator mode and execute the ``.\npu_sw_installer.exe`` file.
 
-- Ensure that NPU MCDM driver (Version:32.0.203.280, Date:5/16/2025) is correctly installed by opening Task Manager -> Performance -> NPU0.
+- Ensure that NPU driver (Version:32.0.203.280, Date:5/16/2025) is correctly installed by opening Task Manager -> Performance -> NPU0. 
 
 
 .. _install-bundled:
@@ -65,18 +67,18 @@ Install NPU Drivers
 Install Ryzen AI Software
 *************************
 
-- Download the Ryzen AI Software installer :download:`ryzenai-lt-1.7.0.exe <https://account.amd.com/en/forms/downloads/ryzenai-eula-public-xef.html?filename=ryzen-ai-lt-1.7.0.exe>`.
+- Download the Ryzen AI Software installer :download:`ryzen-ai-lt-1.7.1.exe <https://account.amd.com/en/forms/downloads/xef.html?filename=ryzen-ai-lt-1.7.1.exe>`.
 
 - Launch the EXE installer and follow the instructions on the installation wizard:
 
   - Accept the terms of the Licence agreement
-  - Provide the destination folder for Ryzen AI installation (default: ``C:\Program Files\RyzenAI\1.7.0``)
-  - Specify the name for the conda environment (default: ``ryzen-ai-1.7.0``)
+  - Provide the destination folder for Ryzen AI installation (default: ``C:\Program Files\RyzenAI\1.7.1``)
+  - Specify the name for the conda environment (default: ``ryzen-ai-1.7.1``)
 
 The Ryzen AI Software packages are now installed in the conda environment created by the installer.
 
 .. note::
-   NuGet package is available to download at :download:`ryzen-ai-1.7.0-nuget.zip <https://account.amd.com/en/forms/downloads/ryzenai-eula-public-xef.html?filename=signed_nuget_1.7.0.zip>`.
+   NuGet package is available to download at :download:`ryzen-ai-1.7.1-nuget.zip <https://account.amd.com/en/forms/downloads/xef.html?filename=1.7.1_nuget_signed.zip>`.
 
 .. _quicktest:
 
@@ -85,7 +87,7 @@ The Ryzen AI Software packages are now installed in the conda environment create
 Test the Installation
 *********************
 
-The Ryzen AI Software installation folder contains test to verify that the software is correctly installed. This installation test can be found in the ``quicktest`` subfolder.
+The Ryzen AI Software installation folder contains test to verify that the software is correctly installed. This installation test can be found in the ``quicktest`` subfolder which is expected to work for Strix (STX) or newer devices.
 
 - Open a Conda command prompt (search for "Miniforge Prompt" in the Windows start menu)
 
@@ -93,7 +95,7 @@ The Ryzen AI Software installation folder contains test to verify that the softw
 
 .. code-block::
 
-   conda activate <env_name>
+   conda activate ryzen-ai-<version>
 
 - Run the test:
 
@@ -104,9 +106,10 @@ The Ryzen AI Software installation folder contains test to verify that the softw
 
 .. code-block::
 
-  INFO: [aiecompiler 77-749] Reading logical device aie2p_8x4_device
-  Using TXN FORMAT 0.1
-  Test Passed
+  [I:onnxruntime:, session_state_utils.cc:243 onnxruntime::session_state_utils::SaveInitializedTensors] Saving initialized tensors.
+  [I:onnxruntime:, session_state_utils.cc:438 onnxruntime::session_state_utils::SaveInitializedTensors] Done saving initialized tensors
+  [I:onnxruntime:, inference_session.cc:2532 onnxruntime::InferenceSession::Initialize] Session successfully initialized.
+  Test Finished
 
 - Verify NPU activity by opening **Task Manager → Performance → NPU** while the test is running. You should see NPU utilization increase during model inference.
 
@@ -114,24 +117,73 @@ The Ryzen AI Software installation folder contains test to verify that the softw
 NPU Offloading with Session Options
 ===================================
 
-This section demonstrates how to enable NPU offloading logs using ONNX Runtime session options. To view detailed logging information, update the session options in ``quicktest.py`` as shown below:
+This section demonstrates how to enable NPU offloading logs using ONNX Runtime session options. The code also includes changes needed in ``quicktest.py`` to run on Phoenix/Hawk Point devices.  
+To view detailed logging information, update the session options in ``quicktest.py`` as shown below:
 
 .. code-block:: python
 
+   import os 
+   import sys
+   import subprocess
+   import numpy as np
    import onnxruntime as ort
 
-  # Create session options
-  session_options = ort.SessionOptions()
-  session_options.log_severity_level = 1  # 0=Verbose, 1=Info, 2=Warning, 3=Error, 4=Fatal
+   def get_npu_info():
+       # Run pnputil as a subprocess to enumerate PCI devices
+       command = r'pnputil /enum-devices /bus PCI /deviceids '
+       process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+       stdout, stderr = process.communicate()
+       # Check for supported Hardware IDs
+       npu_type = ''
+       if 'PCI\\VEN_1022&DEV_1502&REV_00' in stdout.decode(): npu_type = 'PHX/HPT'
+       if 'PCI\\VEN_1022&DEV_17F0&REV_00' in stdout.decode(): npu_type = 'STX'
+       if 'PCI\\VEN_1022&DEV_17F0&REV_10' in stdout.decode(): npu_type = 'STX'
+       if 'PCI\\VEN_1022&DEV_17F0&REV_11' in stdout.decode(): npu_type = 'STX'
+       if 'PCI\\VEN_1022&DEV_17F0&REV_20' in stdout.decode(): npu_type = 'KRK'
+       return npu_type
 
-  try:
-      session = ort.InferenceSession(model,
+   # Get APU type info: PHX/STX/HPT
+   npu_type = get_npu_info()
+   install_dir = os.environ['RYZEN_AI_INSTALLATION_PATH']
+   model       = os.path.join(install_dir, 'quicktest', 'test_model.onnx')
+   providers   = ['VitisAIExecutionProvider']
+   provider_options = [{}]  # Default provider options for STX/KRK and newer devices
+
+   if npu_type == 'PHX/HPT':
+       print("Setting environment for PHX/HPT")
+       xclbin_file = os.path.join(install_dir, 'voe-4.0-win_amd64', 'xclbins', 'phoenix', '4x4.xclbin')
+       provider_options = [{
+            'target': 'X1',
+            'xlnx_enable_py3_round': 0,
+            'xclbin': xclbin_file,
+        }]
+
+   # Create session options
+   session_options = ort.SessionOptions()
+   session_options.log_severity_level = 0  # 0=Verbose, 1=Info, 2=Warning, 3=Error, 4=Fatal
+
+   try:
+       session = ort.InferenceSession(model,
                                 sess_options=session_options,
                                 providers=providers,
                                 provider_options=provider_options)
-  except Exception as e:
-      print(f"Failed to create an InferenceSession: {e}")
-      sys.exit(1)  # Exit the program with a non-zero status to indicate an error
+   except Exception as e:
+       print(f"Failed to create an InferenceSession: {e}")
+       sys.exit(1)  # Exit the program with a non-zero status to indicate an error
+
+   def preprocess_random_image():
+       image_array = np.random.rand(3, 32, 32).astype(np.float32)
+       return np.expand_dims(image_array, axis=0)
+
+   # inference on random image data
+   input_data = preprocess_random_image()
+   try:
+       outputs = session.run(None, {'input': input_data})
+   except Exception as e:
+       print(f"Failed to run the InferenceSession: {e}")
+       sys.exit(1)  # Exit the program with a non-zero status to indicate an error
+   else:
+      print("Test finished")
 
 
 - Run the test:
@@ -139,20 +191,16 @@ This section demonstrates how to enable NPU offloading logs using ONNX Runtime s
 .. code-block::
 
    cd %RYZEN_AI_INSTALLATION_PATH%/quicktest
-   python quicktest.py 2>&1 | findstr /i "Operators Subgraphs VITIS_EP_CPU NPU Test"
+   python quicktest.py 2>&1 | findstr /i "VerifyEachNodeIsAssignedToAnEp | Test"
 
 
 - On a successful run, you will see an output similar to the one shown below. This indicates that the model is running on the NPU and that the installation of the Ryzen AI Software was successful:
 
 .. code-block::
 
-  [Vitis AI EP] No. of Operators :
-      NPU   398
-      VITIS_EP_CPU     2
-  [Vitis AI EP] No. of Subgraphs :
-    NPU     1
-  Test Passed
-
+  [V:onnxruntime:, session_state.cc:1296 onnxruntime::VerifyEachNodeIsAssignedToAnEp] Node placements
+  [V:onnxruntime:, session_state.cc:1299 onnxruntime::VerifyEachNodeIsAssignedToAnEp]  All nodes placed on [VitisAIExecutionProvider]. Number of nodes: 3
+  Test Finished
 
 .. note::
 

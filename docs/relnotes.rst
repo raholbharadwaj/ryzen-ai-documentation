@@ -47,14 +47,35 @@ The following table lists which types of models are supported on what hardware p
      -
      - |checkmark|
 
+*************
+Version 1.7.1
+*************
+
+- LLM
+
+  - Performance improvements for Gemma-3-4B and GPT-OSS-20B
+  - NPU support for SmolLM2-135M-Instruct and SmolLM-135M-Instruct
+  - Long context support up to 16K for NPU models
+
+- Stable Diffusion
+
+  - Support for 10 model classes (t2i, i2i, dynamic shapes, ControlNet)
+  - Performance and memory improvements for SD-2.1-v and SD-3.x
+
+- ASR
+
+  - ASR Whisper-small, medium and Large V3 turbo models are supported on Linux
+
+
 ***********
 Version 1.7
 ***********
 
-- CNN/Transformer compiler
+- CNN/Transformer 
 
   - General Performance improvements (Avg 15-20% improvements expected)
   - ~40% Compile time improvement for transformer models
+  - Whisper.cpp integration enabling scalable ASR support 
 
 - LLM
 
@@ -73,13 +94,6 @@ Version 1.7
 
   - The ``log_level`` provider option is deprecated. Use the ONNX Runtime session option ``log_severity_level`` instead to control Vitis AI execution logs.
 
-*************
-Version 1.6.1
-*************
-- Ryzen AI :doc:`Linux release <linux>` available through the `Ryzen AI Software Early Access Lounge <https://account.amd.com/en/member/ryzenai-sw-ea.html#tabs-a5e122f973-item-4757898120-tab>`_.
-
-  - Support for CNN, Transformer, and LLM flows
-  - Platforms supported - STX, KRK
 
 
 ***********
